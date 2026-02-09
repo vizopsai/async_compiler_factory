@@ -81,7 +81,7 @@ echo "  Started:  $(date)"
 echo "  Stopping: $(date -r $END_TIME 2>/dev/null || date -d @$END_TIME 2>/dev/null || echo "in $DURATION minutes")"
 echo ""
 echo "  Tip: Watch live agent logs in another terminal:"
-echo "    docker logs -f ccc-agent-1"
+echo "    docker logs -f ${RUN_PREFIX}-1"
 echo ""
 
 ELAPSED=0
