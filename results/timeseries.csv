@@ -1,0 +1,61 @@
+repo,time_offset_min,timestamp,commit,tests_passed,tests_total,loc,message
+scaffolding_1_120,0,1770608341,0b15bc6,0,16,65,Initial commit: project skeleton
+scaffolding_1_120,6,1770608728,8098dcf,0,16,2987,Implement lexer; parser; and x86-64 codegen skeleton
+scaffolding_1_120,6,1770608738,10ab326,0,16,2987,Add .gitignore; remove tracked build artifacts
+scaffolding_1_120,9,1770608919,df750dc,16,16,3906,Add AArch64 code generator and multi-arch support
+scaffolding_1_120,12,1770609081,16cf6f6,16,16,3902,Clean up all compiler warnings
+scaffolding_1_120,14,1770609199,0f13410,16,16,3928,Fix AArch64 integer literal handling
+scaffolding_1_120,16,1770609330,c00bd8f,16,16,4111,Add do-while and switch/case statement support
+scaffolding_1_120,18,1770609471,16e3aaf,16,16,4216,Add enum and typedef support
+scaffolding_1_120,21,1770609644,340dc1a,16,16,4237,Add global array support and fix array decay
+scaffolding_1_120,24,1770609796,0c939a9,16,16,4303,Fix type-aware array indexing for char arrays
+scaffolding_1_120,26,1770609906,e329463,16,16,4324,Fix struct pass-by-value for 16-byte structs (AArch64)
+scaffolding_1_120,30,1770610192,0980e82,16,16,4388,Add #define and #undef preprocessor support
+scaffolding_1_120,39,1770610702,f31ef5d,16,16,4567,Fix pointer arithmetic and 64-bit value handling in AArch64 codegen
+scaffolding_1_120,45,1770611078,90105b7,16,16,4806,Add #ifdef/#ifndef/#if/#elif/#else/#endif conditional compilation
+scaffolding_1_120,49,1770611285,3220cd3,16,16,4819,Fix sizeof(expr) to compute actual expression type size
+scaffolding_1_120,52,1770611484,3ffd8e5,16,16,4905,Add array initializer support and char[] string initialization
+scaffolding_1_120,54,1770611582,4a56ba1,16,16,4931,Add multi-variable declaration support (int a; b; c)
+scaffolding_1_120,55,1770611669,20f63e3,16,16,4936,Implement comma operator expression parsing
+scaffolding_1_120,60,1770611975,520f31b,16,16,4947,Fix arrow operator in gen_addr for assignment LHS
+scaffolding_1_120,63,1770612174,3489566,16,16,4984,Fix struct field type-aware stores and nested struct inference
+scaffolding_1_120,65,1770612261,a2a1cde,16,16,5000,Fix nested struct member access (e.g.; r.origin.x)
+scaffolding_1_120,68,1770612451,db58ba3,16,16,5041,Add multi-dimensional array support
+scaffolding_1_120,69,1770612527,3618e0f,16,16,5045,Fix array-of-structs member access and update preprocessor docs
+scaffolding_1_120,71,1770612640,64acc42,16,16,5071,Fix array/struct member access to use pointer decay
+scaffolding_1_120,76,1770612954,8978b08,16,16,5088,Fix struct return by value for AArch64
+scaffolding_1_120,80,1770613191,2438bb1,16,16,5196,Add typedef support to parser
+scaffolding_1_120,85,1770613494,01cf729,16,16,5298,Add static local variable support for AArch64
+scaffolding_1_120,87,1770613583,cd87042,16,16,5337,Add global array initializer list support
+scaffolding_1_120,95,1770614072,ddb402f,16,16,5681,Add function-like macro support to the C preprocessor
+scaffolding_1_120,100,1770614381,0a73c6c,16,16,5746,Add union type support
+scaffolding_1_120,102,1770614479,e9ac5a5,16,16,5771,Fix long/long long type parsing in variable declarations
+scaffolding_1_120,108,1770614843,82bb93f,16,16,5960,Add function pointer declaration and call support
+scaffolding_1_120,112,1770615098,e203404,16,16,5997,Fix char variable store/load and improve cast expressions
+scaffolding_1_120,115,1770615270,2dc7d81,16,16,6007,Add function prototype/forward declaration support
+scaffolding_1_120,118,1770615427,97a6a08,16,16,6024,Fix char parameter storage in function prologues
+scaffolding_2_60,0,1770608508,404a70a,0,16,65,Initial commit: project skeleton
+scaffolding_2_60,1,1770608616,4c24b77,0,16,689,Implement C lexer with full token support
+scaffolding_2_60,1,1770608627,e3f3162,0,16,689,Add .gitignore; remove tracked build artifacts
+scaffolding_2_60,4,1770608761,3e04482,0,16,2002,Implement C parser with full expression/statement support
+scaffolding_2_60,6,1770608925,cd17751,0,16,3286,Implement x86-64 code generator
+scaffolding_2_60,14,1770609360,4ab76ac,8,16,4576,Wire up compilation pipeline and add AArch64 code generator
+scaffolding_2_60,16,1770609481,a832b12,6,16,4471,Rewrite code generator for AArch64; wire up compilation pipeline
+scaffolding_2_60,19,1770609654,245660c,6,16,4503,Fix AArch64 codegen: use positive frame offsets for locals
+scaffolding_2_60,19,1770609679,4c1e77b,15,16,4503,Fix frame pointer usage: use x29 instead of sp for local access
+scaffolding_2_60,20,1770609753,ac5c10f,16,16,4520,Fix struct-by-value passing in function calls
+scaffolding_2_60,25,1770610042,8140ff3,16,16,5601,Add x86-64 code generator and wire architecture dispatch
+scaffolding_2_60,26,1770610081,b64d54e,16,16,4367,Remove unused codegen_aarch64 module
+scaffolding_2_60,28,1770610214,78a0d97,16,16,4514,Fix pointer arithmetic: scale by type size; use 64-bit registers
+scaffolding_2_60,31,1770610387,4ea206c,16,16,4505,Fix switch statement: use callee-saved register for switch value
+scaffolding_2_60,33,1770610538,31dff07,16,16,4538,Add enum constant support
+scaffolding_2_60,34,1770610605,fac2f0f,16,16,4698,Fix pointer arithmetic scaling in x86-64 codegen
+scaffolding_2_60,35,1770610631,695c90e,16,16,4708,Fix multi-variable declarations (int a=1; b=2; c=3)
+scaffolding_2_60,40,1770610939,e32acc2,16,16,4759,Implement static local variables
+scaffolding_2_60,40,1770610963,868b5e8,16,16,4765,Add enum constant support to x86-64 codegen; remove debug output
+scaffolding_2_60,42,1770611040,c33247c,16,16,4825,Add function pointer support
+scaffolding_2_60,44,1770611153,9b456a3,16,16,4825,Remove completed task locks: advanced C features and tests
+scaffolding_2_60,44,1770611156,673c59a,16,16,4825,Fix pointer_inc_size for Array types; add enum support to x86-64
+scaffolding_2_60,48,1770611434,df52c56,16,16,4921,Implement #define preprocessor with ifdef/ifndef support
+scaffolding_2_60,52,1770611685,173e096,16,16,4973,Implement array initializer syntax: int arr[] = {1; 2; 3}
+scaffolding_2_60,60,1770612136,fcfaa29,16,16,4966,Fix unsigned char/short loads to use zero-extension

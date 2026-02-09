@@ -106,19 +106,69 @@ if [ -d src ]; then
     echo ""
 fi
 
-# ---- Build check ----
+# ---- Build + Test (inside Docker) ----
 
-echo "--- Build Status ---"
-if command -v cargo &>/dev/null; then
-    BUILD_OUTPUT=$(cargo build --release 2>&1)
-    if [ $? -eq 0 ]; then
-        echo "  cargo build --release: OK"
+echo "--- Build & Test Status ---"
+if docker image inspect ccc-agent &>/dev/null 2>&1; then
+    DOCKER_CONTAINER_NAME="${RUN_PREFIX}-status-$$"
+
+    # Run build + tests inside a temporary container with the same image
+    # --entrypoint bash: bypass the agent loop (entrypoint.sh)
+    # Mount upstream.git read-only so we don't mutate it
+    DOCKER_OUTPUT=$(docker run --rm \
+        --name "$DOCKER_CONTAINER_NAME" \
+        --entrypoint bash \
+        -v "$UPSTREAM_DIR:/upstream:ro" \
+        --memory 8g \
+        --cpus 2 \
+        ccc-agent \
+        -c '
+            set -e
+
+            # Clone repo
+            git clone /upstream /workspace/code 2>/dev/null
+            cd /workspace/code
+
+            # Build
+            echo "BUILD_START"
+            if cargo build --release 2>&1 | tail -5; then
+                echo "BUILD_OK"
+            else
+                echo "BUILD_FAILED"
+                exit 0
+            fi
+
+            # Run tests (full suite against the baked-in /test-suites/)
+            echo "TEST_START"
+            if [ -f run_tests.sh ]; then
+                chmod +x run_tests.sh
+                bash run_tests.sh 2>&1 || true
+            else
+                echo "No run_tests.sh found"
+            fi
+            echo "TEST_DONE"
+        ' 2>&1) || true
+
+    # Parse and display build result
+    if echo "$DOCKER_OUTPUT" | grep -q "BUILD_OK"; then
+        echo "  Build: OK"
+    elif echo "$DOCKER_OUTPUT" | grep -q "BUILD_FAILED"; then
+        echo "  Build: FAILED"
+        echo "$DOCKER_OUTPUT" | sed -n '/BUILD_START/,/BUILD_FAILED/p' | grep -v BUILD_ | tail -5 | sed 's/^/    /'
     else
-        echo "  cargo build --release: FAILED"
-        echo "$BUILD_OUTPUT" | tail -5 | sed 's/^/    /'
+        echo "  Build: ERROR (container failed)"
+        echo "$DOCKER_OUTPUT" | tail -5 | sed 's/^/    /'
+    fi
+
+    # Parse and display test results
+    TEST_OUTPUT=$(echo "$DOCKER_OUTPUT" | sed -n '/TEST_START/,/TEST_DONE/p' | grep -v 'TEST_START\|TEST_DONE')
+    if [ -n "$TEST_OUTPUT" ]; then
+        echo ""
+        echo "  Tests:"
+        echo "$TEST_OUTPUT" | sed 's/^/    /'
     fi
 else
-    echo "  (cargo not available on host — check inside container)"
+    echo "  (ccc-agent Docker image not found — run ./run.sh first to build it)"
 fi
 echo ""
 
