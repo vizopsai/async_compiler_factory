@@ -27,24 +27,27 @@ FIRST_EPOCH=$(echo "$COMMITS" | head -1 | awk '{print $2}')
 printf "%-10s  %7s  %5s  %8s  %s\n" "TIME" "LINES" "FILES" "TESTS" "COMMIT"
 printf "%-10s  %7s  %5s  %8s  %s\n" "----" "-----" "-----" "-----" "------"
 
-echo "$COMMITS" | while read HASH EPOCH MSG; do
+# Write commits to a file to avoid stdin issues in while loop
+echo "$COMMITS" > /tmp/commits.txt
+
+while read HASH EPOCH MSG; do
     echo "$MSG" | grep -qiE "clearing task|^Lock task" && continue
 
     MINUTES=$(( (EPOCH - FIRST_EPOCH) / 60 ))
-    git checkout "$HASH" --quiet 2>/dev/null || continue
+    git checkout "$HASH" --quiet --force 2>/dev/null || continue
 
     LINES=$(find src -name "*.rs" -exec cat {} + 2>/dev/null | wc -l | tr -d ' ')
     FILES=$(find src -name "*.rs" 2>/dev/null | wc -l | tr -d ' ')
 
     TESTS="-"
-    if cargo build --release 2>/dev/null; then
+    if cargo build --release </dev/null 2>/dev/null; then
         CCC="./target/release/ccc"
         PASS=0; TOTAL=0
         for f in /test-suites/basic/*.c; do
             TOTAL=$((TOTAL + 1))
             OUT="/tmp/ccc_test_bin"
-            if $CCC -o "$OUT" "$f" 2>/dev/null; then
-                RESULT=$(timeout 5 "$OUT" 2>/dev/null)
+            if $CCC -o "$OUT" "$f" </dev/null 2>/dev/null; then
+                RESULT=$(timeout 5 "$OUT" </dev/null 2>/dev/null)
                 EC=$?
                 EXPECTED="${f%.c}.expected"
                 if [ -f "$EXPECTED" ]; then
@@ -59,5 +62,5 @@ echo "$COMMITS" | while read HASH EPOCH MSG; do
     fi
 
     printf "+%-9s  %7s  %5s  %8s  %s\n" "${MINUTES}min" "$LINES" "$FILES" "$TESTS" "${MSG:0:55}"
-done
+done < /tmp/commits.txt
 DOCKER_SCRIPT
