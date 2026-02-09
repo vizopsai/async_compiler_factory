@@ -18,7 +18,8 @@ SHORT=false
 
 # ---- Running agents ----
 
-RUNNING=$(docker ps --filter name=ccc-agent --format "{{.Names}}" 2>/dev/null)
+RUN_PREFIX="ccc-$(basename "$SCRIPT_DIR" | tr -cd 'a-zA-Z0-9_')"
+RUNNING=$(docker ps --filter name=$RUN_PREFIX --format "{{.Names}}" 2>/dev/null)
 RUNNING_COUNT=$(echo "$RUNNING" | grep -c . 2>/dev/null || echo 0)
 
 if [ -z "$RUNNING" ]; then
@@ -33,7 +34,7 @@ echo ""
 echo "Agents running: $RUNNING_COUNT"
 
 if [ "$RUNNING_COUNT" -gt 0 ]; then
-    docker ps --filter name=ccc-agent --format "  {{.Names}}  up {{.RunningFor}}" 2>/dev/null
+    docker ps --filter name=$RUN_PREFIX --format "  {{.Names}}  up {{.RunningFor}}" 2>/dev/null
 fi
 echo ""
 

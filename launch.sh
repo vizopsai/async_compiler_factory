@@ -18,9 +18,13 @@
 set -e
 
 NUM_AGENTS=${1:-2}
-UPSTREAM_DIR="$(cd "$(dirname "$0")" && pwd)/upstream.git"
-LOG_DIR="$(cd "$(dirname "$0")" && pwd)/agent_logs"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+UPSTREAM_DIR="$SCRIPT_DIR/upstream.git"
+LOG_DIR="$SCRIPT_DIR/agent_logs"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+# Unique prefix per worktree so multiple runs don't collide
+RUN_PREFIX="ccc-$(basename "$SCRIPT_DIR" | tr -cd 'a-zA-Z0-9_')"
 
 # Validate prerequisites
 if [ -z "$ANTHROPIC_API_KEY" ]; then
@@ -35,10 +39,10 @@ fi
 
 mkdir -p "$LOG_DIR"
 
-# Kill any existing agent containers from a previous run
-echo "Cleaning up any existing agent containers..."
+# Kill any existing agent containers from a previous run of this worktree
+echo "Cleaning up any existing containers (prefix: $RUN_PREFIX)..."
 for i in $(seq 1 64); do
-    docker rm -f "ccc-agent-$i" 2>/dev/null || true
+    docker rm -f "${RUN_PREFIX}-$i" 2>/dev/null || true
 done
 
 echo "Launching $NUM_AGENTS agents..."
@@ -47,7 +51,7 @@ echo "Logs: $LOG_DIR"
 echo ""
 
 for i in $(seq 1 $NUM_AGENTS); do
-    CONTAINER_NAME="ccc-agent-$i"
+    CONTAINER_NAME="${RUN_PREFIX}-$i"
     LOG_FILE="$LOG_DIR/${CONTAINER_NAME}_${TIMESTAMP}.log"
 
     docker run -d \
@@ -69,9 +73,8 @@ echo ""
 echo "All $NUM_AGENTS agents launched."
 echo ""
 echo "Monitor progress:"
-echo "  docker ps --filter name=ccc-agent"
-echo "  cd upstream.git && git log --oneline -20"
-echo "  docker logs -f ccc-agent-1"
+echo "  docker ps --filter name=${RUN_PREFIX}"
+echo "  docker logs -f ${RUN_PREFIX}-1"
 echo ""
 echo "Stop all agents:"
-echo "  docker stop \$(docker ps -q --filter name=ccc-agent)"
+echo "  docker stop \$(docker ps -q --filter name=${RUN_PREFIX})"

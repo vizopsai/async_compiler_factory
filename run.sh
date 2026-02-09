@@ -20,8 +20,11 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "============================================"
 echo "  CCC Agent Teams"
 echo "============================================"
+RUN_PREFIX="ccc-$(basename "$SCRIPT_DIR" | tr -cd 'a-zA-Z0-9_')"
+
 echo "  Agents:   $NUM_AGENTS"
 echo "  Duration: $DURATION minutes"
+echo "  Prefix:   $RUN_PREFIX"
 echo "============================================"
 echo ""
 
@@ -122,7 +125,7 @@ while [ $ELAPSED -lt $DURATION ]; do
     rm -rf "$TEMP"
 
     # Running containers
-    RUNNING=$(docker ps --filter name=ccc-agent --format "{{.Names}}" 2>/dev/null | wc -l | tr -d ' ')
+    RUNNING=$(docker ps --filter name=$RUN_PREFIX --format "{{.Names}}" 2>/dev/null | wc -l | tr -d ' ')
     echo "  Active agents: $RUNNING"
     echo ""
 done
@@ -133,7 +136,7 @@ echo "============================================"
 echo "  Time's up - stopping agents"
 echo "============================================"
 # Give 30s for the SIGTERM trap to commit+push uncommitted work
-docker stop -t 30 $(docker ps -q --filter name=ccc-agent) 2>/dev/null || true
+docker stop -t 30 $(docker ps -q --filter name=$RUN_PREFIX) 2>/dev/null || true
 echo ""
 
 # ---- Final summary ----
