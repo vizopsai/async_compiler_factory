@@ -1,6 +1,6 @@
-# CCC Agent Teams — Scaffolding
+# Async Compiler Factory to reproduce CCC from Anthropic
 
-Scaffolding to reproduce the results from [Building a C Compiler with Claude Agent Teams](https://www.anthropic.com/engineering/building-c-compiler). Spawns parallel Claude Code agents in Docker containers that coordinate via git to build a C compiler from scratch.
+Scaffolding to reproduce the results from [Building a C Compiler with Claude Agent Teams](https://www.anthropic.com/engineering/building-c-compiler). Spawns parallel Claude Code agents in Docker containers that coordinate via git to build a C compiler from scratch. Also see the blog https://vizops.ai/blog/agent-scaling-laws/ for more details.
 
 ## Quick Start
 
